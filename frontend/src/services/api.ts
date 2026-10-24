@@ -167,4 +167,19 @@ export const api = {
     });
     return handleResponse(res);
   },
+
+  async uploadImage(file: File): Promise<{ url: string; message: string }> {
+    const formData = new FormData();
+    formData.append('image', file);
+    const token = localStorage.getItem('aura_token');
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    return handleResponse(res);
+  },
 };

@@ -11,6 +11,7 @@ import {
   Truck,
   CheckCircle,
   ArrowUpRight,
+  Flame,
 } from 'lucide-react';
 import { AnalyticsData } from '../../types';
 import { api } from '../../services/api';
@@ -65,13 +66,23 @@ export const AdminOverviewPage: React.FC = () => {
       title="Dashboard Overview"
       subtitle="Financial performance, sales velocity, and low-stock alerts"
       actions={
-        <Link
-          to="/admin/products"
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded bg-black text-white font-medium text-xs uppercase tracking-wider hover:bg-neutral-800 transition-colors"
-        >
-          <Package className="w-3.5 h-3.5" />
-          <span>Add New Perfume</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            to="/admin/products?action=add-bakhour"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-amber-700 hover:bg-amber-800 text-white font-medium text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95"
+            title="Create new Bakhour or Incense"
+          >
+            <Flame className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+            <span>Add Bakhour</span>
+          </Link>
+          <Link
+            to="/admin/products"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-black text-white font-medium text-xs uppercase tracking-wider hover:bg-neutral-800 transition-colors shadow-sm active:scale-95"
+          >
+            <Package className="w-3.5 h-3.5" />
+            <span>Add New Perfume</span>
+          </Link>
+        </div>
       }
     >
       {/* 4 Summary KPI Cards */}
