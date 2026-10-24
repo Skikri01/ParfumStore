@@ -1,0 +1,81 @@
+// Prisma schema for SWILA PARFUM with MySQL database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String
+  role          String    @default("customer") // "customer" | "admin"
+  created_at    DateTime  @default(now())
+  orders        Order[]
+
+  @@map("users")
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             String      @id @default(uuid())
+  name           String
+  brand          String
+  description    String      @db.Text
+  price          Float
+  stock_quantity Int         @default(0)
+  volume_ml      Int         @default(100) // e.g. 50, 100, 200
+  top_notes      String      @db.Text
+  heart_notes    String      @db.Text
+  base_notes     String      @db.Text
+  image_url      String      @db.Text
+  category_id    String
+  created_at     DateTime    @default(now())
+
+  category       Category    @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  order_items    OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  user_id          String?
+  customer_name    String?
+  customer_phone   String?
+  customer_city    String?
+  total_amount     Float
+  status           String      @default("pending") // "pending" | "processing" | "shipped" | "delivered" | "cancelled"
+  shipping_address String      @db.Text
+  created_at       DateTime    @default(now())
+
+  user             User?       @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  items            OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                String   @id @default(uuid())
+  order_id          String
+  product_id        String
+  quantity          Int
+  price_at_purchase Float
+
+  order             Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  product           Product  @relation(fields: [product_id], references: [id], onDelete: Restrict)
+
+  @@map("order_items")
+}
